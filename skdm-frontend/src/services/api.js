@@ -1,4 +1,13 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+let envBase = import.meta.env.VITE_API_BASE_URL;
+if (envBase) {
+  if (envBase.endsWith('/')) {
+    envBase = envBase.slice(0, -1);
+  }
+  if (!envBase.endsWith('/api/v1')) {
+    envBase += '/api/v1';
+  }
+}
+const BASE_URL = envBase || '/api/v1';
 
 // Token helpers
 export const getToken = () => localStorage.getItem('skm_access_token');
