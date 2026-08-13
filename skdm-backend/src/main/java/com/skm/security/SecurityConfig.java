@@ -87,7 +87,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/v1/contact").permitAll()
                 // Swagger/Actuator
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
                 // Static resources
                 .requestMatchers("/uploads/**").permitAll()
                 // Admin-only endpoints
