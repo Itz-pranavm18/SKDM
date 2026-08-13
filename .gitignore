@@ -1,0 +1,28 @@
+# Java
+target/
+**/target/
+*.class
+
+# Maven
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+
+# Node
+node_modules/
+skdm-frontend/node_modules/
+dist/
+
+# uploads and logs
+uploads/
+logs/
+
+# OS files
+.DS_Store

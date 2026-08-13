@@ -1,0 +1,202 @@
+{
+	"info": {
+		"_postman_id": "skm-college-management-api",
+		"name": "SKM College Management System API",
+		"description": "Complete Postman collection for Shiv Kumari Mahavidyalaya Backend APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Signup User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Ramesh\",\n  \"lastName\": \"Kumar\",\n  \"username\": \"rameshk\",\n  \"email\": \"ramesh@example.com\",\n  \"password\": \"User@1234\",\n  \"phone\": \"9876543210\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/signup",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "signup"]
+						}
+					}
+				},
+				{
+					"name": "Login (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usernameOrEmail\": \"admin@skmahavidyalaya.ac.in\",\n  \"password\": \"Admin@SKM2024\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{accessToken}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/auth/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "auth", "profile"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Public Content",
+			"item": [
+				{
+					"name": "Get Active Courses",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/courses",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "courses"]
+						}
+					}
+				},
+				{
+					"name": "Get Active Faculty",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/faculty",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "faculty"]
+						}
+					}
+				},
+				{
+					"name": "Get Notices",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/notices",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "notices"]
+						}
+					}
+				},
+				{
+					"name": "Submit Contact Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullName\": \"Suresh Patel\",\n  \"email\": \"suresh@example.com\",\n  \"phone\": \"9876500000\",\n  \"subject\": \"Admission Enquiry\",\n  \"message\": \"I want to know more about the BCA course admission eligibility.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/contact",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "contact"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Admissions",
+			"item": [
+				{
+					"name": "Apply for Admission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{accessToken}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"courseId\": 1,\n  \"sessionYear\": \"2026-27\",\n  \"tenthPercentage\": 82.5,\n  \"twelfthPercentage\": 78.4,\n  \"category\": \"GEN\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admissions",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "admissions"]
+						}
+					}
+				},
+				{
+					"name": "Get My Admissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{accessToken}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admissions/my",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "admissions", "my"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin Operations",
+			"item": [
+				{
+					"name": "Admin Dashboard Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{accessToken}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/dashboard",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "admin", "dashboard"]
+						}
+					}
+				},
+				{
+					"name": "Admin List All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{accessToken}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/admin/users?page=0&size=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "v1", "admin", "users"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		}
+	]
+}
