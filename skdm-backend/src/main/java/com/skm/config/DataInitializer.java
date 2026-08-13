@@ -32,6 +32,7 @@ public class DataInitializer implements CommandLineRunner {
         private final EventRepository eventRepository;
         private final FeeStructureRepository feeStructureRepository;
         private final PasswordEncoder passwordEncoder;
+        private final org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
 
         @Value("${app.admin.default-email:admin@skmahavidyalaya.ac.in}")
         private String adminEmail;
@@ -45,6 +46,7 @@ public class DataInitializer implements CommandLineRunner {
         @Override
         public void run(String... args) {
                 log.info("Checking and initializing default database records...");
+                createTablesIfNotExist();
                 initRoles();
                 initAdminUser();
                 initDepartmentsAndCourses();
@@ -55,6 +57,26 @@ public class DataInitializer implements CommandLineRunner {
                 initTestimonials();
                 initEvents();
                 log.info("Database initialization completed successfully.");
+        }
+
+        private void createTablesIfNotExist() {
+                try {
+                        jdbcTemplate.execute(
+                                        "CREATE TABLE IF NOT EXISTS course_subjects (" +
+                                                        "course_id BIGINT NOT NULL, " +
+                                                        "subject VARCHAR(255), " +
+                                                        "INDEX idx_course_subjects_course_id (course_id)" +
+                                                        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                        jdbcTemplate.execute(
+                                        "CREATE TABLE IF NOT EXISTS admission_documents (" +
+                                                        "admission_id BIGINT NOT NULL, " +
+                                                        "document_url VARCHAR(500), " +
+                                                        "INDEX idx_admission_docs_admission_id (admission_id)" +
+                                                        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                        log.info("Ensured auxiliary collection tables (course_subjects, admission_documents) exist.");
+                } catch (Exception e) {
+                        log.warn("Notice during table pre-creation: {}", e.getMessage());
+                }
         }
 
         private void initFeeStructures() {
