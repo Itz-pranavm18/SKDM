@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS courses (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS course_subjects (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     course_id BIGINT NOT NULL,
     subject VARCHAR(255),
     INDEX idx_course_subjects_course_id (course_id)
@@ -109,6 +110,7 @@ CREATE TABLE IF NOT EXISTS admissions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS admission_documents (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     admission_id BIGINT NOT NULL,
     document_url VARCHAR(500),
     INDEX idx_admission_docs_admission_id (admission_id)
