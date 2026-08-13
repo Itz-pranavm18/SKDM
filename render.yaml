@@ -2,7 +2,7 @@ services:
   - type: web
     name: skm-backend
     env: docker
-    dockercontext: ./skdm-backend
+    dockerContext: ./skdm-backend
     dockerfilePath: ./skdm-backend/Dockerfile
     plan: free
     healthCheckPath: /actuator/health
