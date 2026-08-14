@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
+import { faculty as staticFaculty, departments as staticDepartments } from "../data/collegeData";
 import { facultyApi, getFileUrl } from "../services/api";
 
 export default function Faculty() {

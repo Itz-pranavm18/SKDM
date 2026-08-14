@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
+import { galleryItems as staticGalleryItems } from "../data/collegeData";
 import { galleryApi, getFileUrl } from "../services/api";
 
 const huePairs = [

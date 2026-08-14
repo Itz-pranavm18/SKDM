@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
+import { notices as staticNotices } from "../data/collegeData";
 import { noticesApi, getFileUrl } from "../services/api";
 
 export default function Notices() {
