@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
-import { faculty as staticFaculty, departments as staticDepartments } from "../data/collegeData";
-import { facultyApi } from "../services/api";
+import { facultyApi, getFileUrl } from "../services/api";
 
 export default function Faculty() {
   const [facultyList, setFacultyList] = useState([]);
@@ -75,7 +74,7 @@ export default function Faculty() {
                 <div className="card faculty-card" key={f.name + idx}>
                   {f.photoUrl ? (
                     <img
-                      src={f.photoUrl}
+                      src={getFileUrl(f.photoUrl)}
                       alt={f.name}
                       className="faculty-avatar"
                       style={{ objectFit: "cover" }}

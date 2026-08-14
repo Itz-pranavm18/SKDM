@@ -9,6 +9,17 @@ if (envBase) {
 }
 const BASE_URL = envBase || '/api/v1';
 
+// File URL helper to ensure /uploads/... resolves to the backend host
+export const getFileUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) {
+    return url;
+  }
+  const root = BASE_URL.replace(/\/api\/v1\/?$/, '');
+  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  return `${root}${cleanPath}`;
+};
+
 // Token helpers
 export const getToken = () => localStorage.getItem('skm_access_token');
 export const getRefreshToken = () => localStorage.getItem('skm_refresh_token');

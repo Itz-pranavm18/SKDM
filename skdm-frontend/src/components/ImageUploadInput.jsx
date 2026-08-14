@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { uploadApi } from '../services/api';
+import { uploadApi, getFileUrl } from '../services/api';
 import Icon from './Icons';
 
 export default function ImageUploadInput({
@@ -59,7 +59,7 @@ export default function ImageUploadInput({
             </div>
           ) : (
             <img
-              src={value}
+              src={getFileUrl(value)}
               alt="Preview"
               style={{ width: 54, height: 54, objectFit: 'cover', borderRadius: 6, border: '1px solid #cbd5e1' }}
               onError={(e) => { e.target.style.display = 'none'; }}

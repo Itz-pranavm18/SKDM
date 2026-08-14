@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
-import { notices as staticNotices } from "../data/collegeData";
-import { noticesApi } from "../services/api";
+import { noticesApi, getFileUrl } from "../services/api";
 
 export default function Notices() {
   const [noticeList, setNoticeList] = useState([]);
@@ -63,7 +62,7 @@ export default function Notices() {
                       {n.link && (
                         <div style={{ marginTop: 8 }}>
                           <a
-                            href={n.link}
+                            href={getFileUrl(n.link)}
                             target="_blank"
                             rel="noreferrer"
                             style={{

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
-import { galleryItems as staticGalleryItems } from "../data/collegeData";
-import { galleryApi } from "../services/api";
+import { galleryApi, getFileUrl } from "../services/api";
 
 const huePairs = [
   ["#7A1F2B", "#1F2A44"],
@@ -103,7 +102,7 @@ export default function Gallery() {
                   >
                     {g.imageUrl && (
                       <img
-                        src={g.imageUrl}
+                        src={getFileUrl(g.imageUrl)}
                         alt={g.caption}
                         style={{
                           position: "absolute",
@@ -210,7 +209,7 @@ export default function Gallery() {
             >
               {lightboxItem.imageUrl ? (
                 <img
-                  src={lightboxItem.imageUrl}
+                  src={getFileUrl(lightboxItem.imageUrl)}
                   alt={lightboxItem.caption || "Gallery Photograph"}
                   style={{
                     maxWidth: "100%",

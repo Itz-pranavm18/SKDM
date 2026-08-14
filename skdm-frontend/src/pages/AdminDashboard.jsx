@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { adminApi } from '../services/api';
+import { adminApi, getFileUrl } from '../services/api';
 import { downloadFeeReceipt } from '../utils/pdfReceiptGenerator';
 import Icon from '../components/Icons';
 import ImageUploadInput from '../components/ImageUploadInput';
@@ -943,7 +943,7 @@ export default function AdminDashboard() {
                           </td>
                           <td style={{ padding: '14px', fontSize: 13 }}>
                             {req.screenshotUrl ? (
-                              <a href={req.screenshotUrl} target="_blank" rel="noreferrer" style={{ color: '#2563eb', fontWeight: 700, display: 'block', marginBottom: 4 }}>
+                              <a href={getFileUrl(req.screenshotUrl)} target="_blank" rel="noreferrer" style={{ color: '#2563eb', fontWeight: 700, display: 'block', marginBottom: 4 }}>
                                 🖼 View Proof Screenshot
                               </a>
                             ) : null}
@@ -1830,7 +1830,7 @@ export default function AdminDashboard() {
                       <td>
                         {f.photoUrl ? (
                           <img
-                            src={f.photoUrl}
+                            src={getFileUrl(f.photoUrl)}
                             alt={f.name}
                             style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: '1px solid #cbd5e1' }}
                             onError={(e) => {
@@ -1881,7 +1881,7 @@ export default function AdminDashboard() {
             <div className="gallery-admin-grid">
               {gallery.map((g) => (
                 <div key={g.id} className="gallery-admin-card">
-                  <img src={g.imageUrl || '/uploads/campus.jpg'} alt={g.caption} />
+                  <img src={getFileUrl(g.imageUrl) || '/uploads/campus.jpg'} alt={g.caption} />
                   <div className="gallery-card-info">
                     <h4>{g.caption || 'Campus Photo'}</h4>
                     <span className="badge role-badge">{g.tag || 'Campus'}</span>
