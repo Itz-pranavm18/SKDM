@@ -5,7 +5,7 @@ services:
     dockerContext: ./skdm-backend
     dockerfilePath: ./skdm-backend/Dockerfile
     plan: free
-    healthCheckPath: /actuator/health/liveness
+    healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_DATASOURCE_URL
         sync: false
