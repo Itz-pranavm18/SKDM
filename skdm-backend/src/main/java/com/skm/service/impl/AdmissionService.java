@@ -72,7 +72,7 @@ public class AdmissionService {
             lastName = name.substring(idx + 1).trim();
         }
 
-        // Email setup
+        // Email setup — if blank, auto-generate a unique local email using the unique studentId
         String email = request.getEmail();
         if (email != null && !email.isBlank()) {
             String trimmedEmail = email.trim();
@@ -81,7 +81,12 @@ public class AdmissionService {
             }
             email = trimmedEmail;
         } else {
+            // studentId is guaranteed unique by generateUniqueStudentId(), so this email will also be unique
             email = studentId.toLowerCase() + "@skm.local";
+            // Extra safety: if somehow this auto-email already exists, append a random suffix
+            if (userRepository.existsByEmail(email)) {
+                email = studentId.toLowerCase() + "." + System.currentTimeMillis() + "@skm.local";
+            }
         }
 
         // Password defaults to DOB
@@ -118,8 +123,10 @@ public class AdmissionService {
         // Initialize Semester Fee Record for the admitted student
         feeManagementService.initializeStudentSemesterFee(studentUser, normalizedCourse, semester);
 
-        // Create Admission entity record
-        String appNum = "SKM-" + normalizedCourse + "-" + LocalDate.now().getYear() + "-" + String.format("%05d", admissionRepository.count() + 1);
+        // Create Admission entity record — use timestamp+random to avoid conflicts with pre-existing data
+        String appNum = "SKM-" + normalizedCourse + "-" + LocalDate.now().getYear() + "-"
+                + String.format("%05d", (admissionRepository.count() + 1))
+                + "-" + String.format("%04d", new Random().nextInt(9000) + 1000);
         Course course = courseRepository.findByCode(normalizedCourse).orElse(null);
 
         Admission admission = Admission.builder()
