@@ -5,7 +5,6 @@ services:
     dockerContext: ./skdm-backend
     dockerfilePath: ./skdm-backend/Dockerfile
     plan: free
-    healthCheckPath: /actuator/health
     envVars:
       - key: PORT
         value: 10000
