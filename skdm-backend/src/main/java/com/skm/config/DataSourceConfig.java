@@ -33,28 +33,36 @@ public class DataSourceConfig {
         log.info("Evaluating DataSource configuration with target URL: {}", primaryUrl);
 
         if (primaryUrl != null && !primaryUrl.isBlank() && !primaryUrl.contains("localhost")) {
+            boolean connectionOk = false;
             try {
-                HikariConfig config = new HikariConfig();
-                config.setJdbcUrl(primaryUrl);
-                config.setUsername(primaryUsername);
-                config.setPassword(primaryPassword);
-                config.setDriverClassName(primaryDriver);
-                config.setMaximumPoolSize(10);
-                config.setMinimumIdle(2);
-                config.setConnectionTimeout(8000); // 8s timeout to avoid blocking deployment
-                config.setInitializationFailTimeout(1);
-                config.setPoolName("SKMMysqlPool");
-
-                HikariDataSource ds = new HikariDataSource(config);
-                try (Connection conn = ds.getConnection()) {
-                    log.info("Successfully connected to primary MySQL database: {}", primaryUrl);
-                    return ds;
-                } catch (Exception connEx) {
-                    log.warn("Primary MySQL connection test failed ({}). Activating resilient H2 database fallback.", connEx.getMessage());
-                    ds.close();
+                Class.forName(primaryDriver);
+                java.sql.DriverManager.setLoginTimeout(5);
+                try (Connection testConn = java.sql.DriverManager.getConnection(primaryUrl, primaryUsername, primaryPassword)) {
+                    if (testConn != null && !testConn.isClosed()) {
+                        connectionOk = true;
+                        log.info("Primary MySQL connection verified successfully: {}", primaryUrl);
+                    }
                 }
-            } catch (Exception ex) {
-                log.warn("Failed to initialize primary MySQL ({}). Activating resilient H2 database fallback.", ex.getMessage());
+            } catch (Throwable t) {
+                log.warn("Primary MySQL connectivity check failed ({}). Activating resilient H2 fallback database.", t.getMessage());
+            }
+
+            if (connectionOk) {
+                try {
+                    HikariConfig config = new HikariConfig();
+                    config.setJdbcUrl(primaryUrl);
+                    config.setUsername(primaryUsername);
+                    config.setPassword(primaryPassword);
+                    config.setDriverClassName(primaryDriver);
+                    config.setMaximumPoolSize(10);
+                    config.setMinimumIdle(2);
+                    config.setConnectionTimeout(8000);
+                    config.setInitializationFailTimeout(-1);
+                    config.setPoolName("SKMMysqlPool");
+                    return new HikariDataSource(config);
+                } catch (Throwable ex) {
+                    log.warn("Failed to create Hikari MySQL DataSource ({}). Activating fallback.", ex.getMessage());
+                }
             }
         }
 
