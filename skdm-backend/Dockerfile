@@ -10,5 +10,5 @@ FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 VOLUME /tmp
 COPY --from=build /app/target/skm-backend-*.jar app.jar
-EXPOSE 8080
+EXPOSE 10000 8080
 ENTRYPOINT ["java", "-XX:+UseSerialGC", "-XX:MaxRAMPercentage=75.0", "-Xss512k", "-jar", "app.jar"]
