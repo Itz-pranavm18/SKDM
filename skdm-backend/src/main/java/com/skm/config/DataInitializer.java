@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -30,6 +31,9 @@ public class DataInitializer implements CommandLineRunner {
     private final EventRepository eventRepository;
     private final FeeStructureRepository feeStructureRepository;
     private final AdmissionRepository admissionRepository;
+    private final StudentSemesterFeeRepository studentSemesterFeeRepository;
+    private final FeePaymentRequestRepository feePaymentRequestRepository;
+    private final FeePaymentReceiptRepository feePaymentReceiptRepository;
     private final ContactMessageRepository contactMessageRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -45,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        log.info("Checking and seeding comprehensive database records from backup...");
+        log.info("Checking and seeding 100% full database records from SQL backup...");
         initRoles();
         initAdminUser();
         initDepartmentsAndCourses();
@@ -56,8 +60,9 @@ public class DataInitializer implements CommandLineRunner {
         initTestimonials();
         initEvents();
         initStudentsAndAdmissions();
+        initSemesterFeesAndPayments();
         initContactMessages();
-        log.info("Comprehensive database seeding completed successfully.");
+        log.info("Complete database seeding finished successfully.");
     }
 
     private void initRoles() {
@@ -239,103 +244,202 @@ public class DataInitializer implements CommandLineRunner {
         Course ba = courseRepository.findByCode("BA").orElse(null);
         Course bsc = courseRepository.findByCode("BSC").orElse(null);
 
-        // 1. Anjali Verma (BA442226)
-        if (!userRepository.existsByEmail("anjali234@gmail.com")) {
-            User anjali = User.builder()
-                    .username("BA442226")
-                    .email("anjali234@gmail.com")
-                    .password(passwordEncoder.encode("Anjali@123"))
-                    .firstName("Anjali")
-                    .lastName("verma")
-                    .phone("6352635214")
-                    .address("chaitanya boys hostel,shivbagh colony ,ameerpet")
-                    .studentId("BA442226")
-                    .courseName("BA")
-                    .currentSemester("Semester 3")
-                    .totalFee(21000.0)
-                    .paidFee(14000.0)
-                    .remainingFee(7000.0)
-                    .active(true)
-                    .emailVerified(true)
-                    .roles(new HashSet<>(Set.of(userRole)))
-                    .build();
-            userRepository.save(anjali);
-
-            if (ba != null) {
-                admissionRepository.save(Admission.builder()
-                        .applicationNumber("SKM-BA-2026-00006")
-                        .course(ba)
-                        .user(anjali)
-                        .status("APPROVED")
-                        .sessionYear("2026-2027")
-                        .build());
-            }
-        }
-
-        // 2. Pranav Mishra (BSC696071)
-        if (!userRepository.existsByEmail("pranavmishra98@gmail.com")) {
-            User pranav = User.builder()
-                    .username("BSC696071")
-                    .email("pranavmishra98@gmail.com")
+        // 1. User 4: pranavmishra519@gmail.com
+        if (!userRepository.existsByEmail("pranavmishra519@gmail.com")) {
+            userRepository.save(User.builder()
+                    .username("pranv18").email("pranavmishra519@gmail.com")
                     .password(passwordEncoder.encode("Pranav@123"))
-                    .firstName("Pranav")
-                    .lastName("mishra")
-                    .phone("6393417529")
-                    .address("Barua Uttari Lambhua Sultanpur")
-                    .studentId("BSC696071")
-                    .courseName("BSC")
-                    .currentSemester("Semester 2")
-                    .totalFee(21000.0)
-                    .paidFee(10500.0)
-                    .remainingFee(10500.0)
-                    .active(true)
-                    .emailVerified(true)
-                    .roles(new HashSet<>(Set.of(userRole)))
-                    .build();
-            userRepository.save(pranav);
+                    .firstName("Pranav").lastName("mishra").phone("6393417529")
+                    .active(true).emailVerified(true)
+                    .roles(new HashSet<>(Set.of(userRole))).build());
+        }
 
-            if (bsc != null) {
-                admissionRepository.save(Admission.builder()
-                        .applicationNumber("SKM-BSC-2026-00005")
-                        .course(bsc)
-                        .user(pranav)
-                        .status("APPROVED")
-                        .sessionYear("2026-2027")
-                        .build());
+        // 2. User 11: pranavmishra5@gmail.com (BA577225)
+        if (!userRepository.existsByEmail("pranavmishra5@gmail.com")) {
+            User u11 = userRepository.save(User.builder()
+                    .username("BA577225").email("pranavmishra5@gmail.com")
+                    .password(passwordEncoder.encode("Pranav@123"))
+                    .firstName("Pranav").lastName("mishra").phone("6393417529")
+                    .address("chaitanya boys hostel,shivbagh colony ,ameerpet")
+                    .studentId("BA577225").courseName("Bachelor of Arts (B.A.)")
+                    .totalFee(12000.0).paidFee(2000.0).remainingFee(10000.0)
+                    .active(true).emailVerified(true)
+                    .roles(new HashSet<>(Set.of(userRole))).build());
+            if (ba != null) {
+                admissionRepository.save(Admission.builder().applicationNumber("SKM-BA-2026-00001").course(ba).user(u11).status("APPROVED").sessionYear("2026-2027").build());
             }
         }
 
-        // 3. Raja Saanb (BSC217481)
-        if (!userRepository.existsByEmail("bfdjbj@gmail.com")) {
-            User raja = User.builder()
-                    .username("BSC217481")
-                    .email("bfdjbj@gmail.com")
-                    .password(passwordEncoder.encode("Raja@123"))
-                    .firstName("Raja")
-                    .lastName("Saanb")
-                    .phone("562314588")
-                    .address("Pratapgarh")
-                    .studentId("BSC217481")
-                    .courseName("BSC")
-                    .currentSemester("Semester 1")
-                    .totalFee(6500.0)
-                    .paidFee(4000.0)
-                    .remainingFee(2500.0)
-                    .active(true)
-                    .emailVerified(true)
-                    .roles(new HashSet<>(Set.of(userRole)))
-                    .build();
-            userRepository.save(raja);
-
-            if (bsc != null) {
-                admissionRepository.save(Admission.builder()
-                        .applicationNumber("SKM-BSC-2026-00007")
-                        .course(bsc)
-                        .user(raja)
-                        .status("APPROVED")
-                        .sessionYear("2026-2027")
-                        .build());
+        // 3. User 12: pranavmishra59@gmail.com (BA488842)
+        if (!userRepository.existsByEmail("pranavmishra59@gmail.com")) {
+            User u12 = userRepository.save(User.builder()
+                    .username("BA488842").email("pranavmishra59@gmail.com")
+                    .password(passwordEncoder.encode("Pranav@123"))
+                    .firstName("Pranav").lastName("Mishra").phone("6393417529")
+                    .address("saraswati boys hostel,IET campus ,ayodhya")
+                    .studentId("BA488842").courseName("Bachelor of Arts (B.A.)")
+                    .totalFee(12000.0).paidFee(0.0).remainingFee(12000.0)
+                    .active(true).emailVerified(true)
+                    .roles(new HashSet<>(Set.of(userRole))).build());
+            if (ba != null) {
+                admissionRepository.save(Admission.builder().applicationNumber("SKM-BA-2026-00002").course(ba).user(u12).status("APPROVED").sessionYear("2026-2027").build());
             }
+        }
+
+        // 4. User 13: pramishra519@gmail.com (BSC641212)
+        if (!userRepository.existsByEmail("pramishra519@gmail.com")) {
+            User u13 = userRepository.save(User.builder()
+                    .username("BSC641212").email("pramishra519@gmail.com")
+                    .password(passwordEncoder.encode("Pranav@123"))
+                    .firstName("Pranav").lastName("mishra").phone("94547166393")
+                    .address("Barua Uttari Lambhua Sultanpur")
+                    .studentId("BSC641212").courseName("Bachelor of Science (B.Sc.)")
+                    .totalFee(16000.0).paidFee(0.0).remainingFee(16000.0)
+                    .active(true).emailVerified(true)
+                    .roles(new HashSet<>(Set.of(userRole))).build());
+            if (bsc != null) {
+                admissionRepository.save(Admission.builder().applicationNumber("SKM-BSC-2026-00003").course(bsc).user(u13).status("APPROVED").sessionYear("2026-2027").build());
+            }
+        }
+
+        // 5. User 14: pranavmi2@gmail.com (BA255557)
+        if (!userRepository.existsByEmail("pranavmi2@gmail.com")) {
+            User u14 = userRepository.save(User.builder()
+                    .username("BA255557").email("pranavmi2@gmail.com")
+                    .password(passwordEncoder.encode("Pranav@123"))
+                    .firstName("Pranav").lastName("mishra").phone("6393417529")
+                    .address("saraswati boys hostel,IET campus ,ayodhya")
+                    .studentId("BA255557").courseName("Bachelor of Arts (B.A.)")
+                    .totalFee(12000.0).paidFee(12000.0).remainingFee(0.0)
+                    .active(true).emailVerified(true)
+                    .roles(new HashSet<>(Set.of(userRole))).build());
+            if (ba != null) {
+                admissionRepository.save(Admission.builder().applicationNumber("SKM-BA-2026-00004").course(ba).user(u14).status("APPROVED").sessionYear("2026-2027").build());
+            }
+        }
+
+        // 6. User 15: pranavmishra98@gmail.com (BSC696071)
+        if (!userRepository.existsByEmail("pranavmishra98@gmail.com")) {
+            User u15 = userRepository.save(User.builder()
+                    .username("BSC696071").email("pranavmishra98@gmail.com")
+                    .password(passwordEncoder.encode("Pranav@123"))
+                    .firstName("Pranav").lastName("mishra").phone("6393417529")
+                    .address("Barua Uttari Lambhua Sultanpur")
+                    .studentId("BSC696071").courseName("BSC")
+                    .currentSemester("Semester 2")
+                    .totalFee(21000.0).paidFee(10500.0).remainingFee(10500.0)
+                    .active(true).emailVerified(true)
+                    .roles(new HashSet<>(Set.of(userRole))).build());
+            if (bsc != null) {
+                admissionRepository.save(Admission.builder().applicationNumber("SKM-BSC-2026-00005").course(bsc).user(u15).status("APPROVED").sessionYear("2026-2027").build());
+            }
+        }
+
+        // 7. User 16: anjali234@gmail.com (BA442226)
+        if (!userRepository.existsByEmail("anjali234@gmail.com")) {
+            User u16 = userRepository.save(User.builder()
+                    .username("BA442226").email("anjali234@gmail.com")
+                    .password(passwordEncoder.encode("Anjali@123"))
+                    .firstName("Anjali").lastName("verma").phone("6352635214")
+                    .address("chaitanya boys hostel,shivbagh colony ,ameerpet")
+                    .studentId("BA442226").courseName("BA")
+                    .currentSemester("Semester 3")
+                    .totalFee(21000.0).paidFee(14000.0).remainingFee(7000.0)
+                    .active(true).emailVerified(true)
+                    .roles(new HashSet<>(Set.of(userRole))).build());
+            if (ba != null) {
+                admissionRepository.save(Admission.builder().applicationNumber("SKM-BA-2026-00006").course(ba).user(u16).status("APPROVED").sessionYear("2026-2027").build());
+            }
+        }
+
+        // 8. User 17: bfdjbj@gmail.com (BSC217481)
+        if (!userRepository.existsByEmail("bfdjbj@gmail.com")) {
+            User u17 = userRepository.save(User.builder()
+                    .username("BSC217481").email("bfdjbj@gmail.com")
+                    .password(passwordEncoder.encode("Raja@123"))
+                    .firstName("Raja").lastName("Saanb").phone("562314588")
+                    .address("Pratapgarh")
+                    .studentId("BSC217481").courseName("BSC")
+                    .currentSemester("Semester 1")
+                    .totalFee(6500.0).paidFee(4000.0).remainingFee(2500.0)
+                    .active(true).emailVerified(true)
+                    .roles(new HashSet<>(Set.of(userRole))).build());
+            if (bsc != null) {
+                admissionRepository.save(Admission.builder().applicationNumber("SKM-BSC-2026-00007").course(bsc).user(u17).status("APPROVED").sessionYear("2026-2027").build());
+            }
+        }
+    }
+
+    private void initSemesterFeesAndPayments() {
+        User u15 = userRepository.findByEmailAndDeletedFalse("pranavmishra98@gmail.com").orElse(null);
+        User u16 = userRepository.findByEmailAndDeletedFalse("anjali234@gmail.com").orElse(null);
+        User u17 = userRepository.findByEmailAndDeletedFalse("bfdjbj@gmail.com").orElse(null);
+
+        if (u16 != null && studentSemesterFeeRepository.findByUserOrderBySemesterAsc(u16).isEmpty()) {
+            StudentSemesterFee ssf1 = studentSemesterFeeRepository.save(StudentSemesterFee.builder()
+                    .user(u16).courseCode("BA").semester("Semester 1")
+                    .academicFee(5000.0).sportsFee(500.0).examFee(1000.0).otherFee(500.0)
+                    .academicPaid(true).sportsPaid(true).examPaid(true).otherPaid(true)
+                    .status("PAID").build());
+
+            StudentSemesterFee ssf2 = studentSemesterFeeRepository.save(StudentSemesterFee.builder()
+                    .user(u16).courseCode("BA").semester("Semester 2")
+                    .academicFee(5000.0).sportsFee(500.0).examFee(1000.0).otherFee(500.0)
+                    .academicPaid(true).sportsPaid(true).examPaid(true).otherPaid(true)
+                    .status("PAID").build());
+
+            studentSemesterFeeRepository.save(StudentSemesterFee.builder()
+                    .user(u16).courseCode("BA").semester("Semester 3")
+                    .academicFee(5000.0).sportsFee(500.0).examFee(1000.0).otherFee(500.0)
+                    .academicPaid(false).sportsPaid(false).examPaid(false).otherPaid(false)
+                    .status("PENDING").build());
+
+            feePaymentReceiptRepository.save(FeePaymentReceipt.builder()
+                    .user(u16).studentSemesterFee(ssf1).receiptNumber("REC-20260806-9903")
+                    .semester("Semester 1").courseCode("BA").academicAmount(5000.0).sportsAmount(0.0).examAmount(1000.0).otherAmount(500.0).totalPaid(6500.0)
+                    .feeTypesPaid("Academic Fee, Exam Fee, Other Fee").paymentStatus("PAID").paymentDate(LocalDateTime.now().minusDays(10)).build());
+
+            feePaymentReceiptRepository.save(FeePaymentReceipt.builder()
+                    .user(u16).studentSemesterFee(ssf1).receiptNumber("REC-20260806-9751")
+                    .semester("Semester 1").courseCode("BA").academicAmount(0.0).sportsAmount(500.0).examAmount(0.0).otherAmount(0.0).totalPaid(500.0)
+                    .feeTypesPaid("Sports Fee").paymentStatus("PAID").paymentDate(LocalDateTime.now().minusDays(10)).build());
+
+            feePaymentReceiptRepository.save(FeePaymentReceipt.builder()
+                    .user(u16).studentSemesterFee(ssf2).receiptNumber("REC-20260806-5030")
+                    .semester("Semester 2").courseCode("BA").academicAmount(5000.0).sportsAmount(500.0).examAmount(1000.0).otherAmount(500.0).totalPaid(7000.0)
+                    .feeTypesPaid("Academic Fee, Sports Fee, Exam Fee, Other Fee").paymentStatus("PAID").paymentDate(LocalDateTime.now().minusDays(10)).build());
+        }
+
+        if (u15 != null && studentSemesterFeeRepository.findByUserOrderBySemesterAsc(u15).isEmpty()) {
+            StudentSemesterFee ssf3 = studentSemesterFeeRepository.save(StudentSemesterFee.builder()
+                    .user(u15).courseCode("BSC").semester("Semester 1")
+                    .academicFee(8000.0).sportsFee(500.0).examFee(1200.0).otherFee(800.0)
+                    .academicPaid(true).sportsPaid(true).examPaid(true).otherPaid(true)
+                    .status("PAID").build());
+
+            studentSemesterFeeRepository.save(StudentSemesterFee.builder()
+                    .user(u15).courseCode("BSC").semester("Semester 2")
+                    .academicFee(8000.0).sportsFee(500.0).examFee(1200.0).otherFee(800.0)
+                    .academicPaid(false).sportsPaid(false).examPaid(false).otherPaid(false)
+                    .status("PENDING").build());
+
+            feePaymentReceiptRepository.save(FeePaymentReceipt.builder()
+                    .user(u15).studentSemesterFee(ssf3).receiptNumber("REC-20260806-1775")
+                    .semester("Semester 1").courseCode("BSC").academicAmount(8000.0).sportsAmount(500.0).examAmount(1200.0).otherAmount(800.0).totalPaid(10500.0)
+                    .feeTypesPaid("Academic Fee, Sports Fee, Exam Fee, Other Fee").paymentStatus("PAID").paymentDate(LocalDateTime.now().minusDays(10)).build());
+        }
+
+        if (u17 != null && studentSemesterFeeRepository.findByUserOrderBySemesterAsc(u17).isEmpty()) {
+            StudentSemesterFee ssf6 = studentSemesterFeeRepository.save(StudentSemesterFee.builder()
+                    .user(u17).courseCode("BSC").semester("Semester 1")
+                    .academicFee(4000.0).sportsFee(500.0).examFee(1200.0).otherFee(800.0)
+                    .academicPaid(true).sportsPaid(false).examPaid(false).otherPaid(false)
+                    .status("PARTIAL").build());
+
+            feePaymentReceiptRepository.save(FeePaymentReceipt.builder()
+                    .user(u17).studentSemesterFee(ssf6).receiptNumber("REC-20260807-9340")
+                    .semester("Semester 1").courseCode("BSC").academicAmount(4000.0).sportsAmount(0.0).examAmount(0.0).otherAmount(0.0).totalPaid(4000.0)
+                    .feeTypesPaid("Academic Fee").paymentStatus("PAID").paymentDate(LocalDateTime.now().minusDays(9)).build());
         }
     }
 
